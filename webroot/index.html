@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>qwe</title>
+    <script src="websocket.js"></script>
+    <script>
+        function onKeyPress(e) {
+            if(e.keyCode == 13) {
+                var tb = document.getElementById("messageBox");
+                if(tb.value != "") {
+                    sendMessage(tb.value);
+                }
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+    <input id="messageBox" type="text" autofocus value="msg123" onkeypress="return onKeyPress(event)">
+</body>
+</html>
