@@ -28,7 +28,7 @@
                 var authorList = document.getElementById("messageList").getElementsByClassName("author");
                 for(var i = 0; i < authorList.length; i++) {
                     if(authorList[i].classList.contains("author"+item.id)) {
-                        authorList[i].innerText = item.name;
+                        authorList[i].innerText = item.name + ":";
                         authorList[i].style.color = item.name_color;
                     }
                 }
