@@ -1,0 +1,46 @@
+#messageBox {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#inputName {
+    float: left;
+}
+#changeName {
+    /*display: inline-block;*/
+    line-height: 25px;
+    float: left;
+}
+
+#changeColor {
+    width: 25px;
+    height: 25px;
+    background-color: yellowgreen;
+    float: right;
+    /*display: inline-block;*/
+}
+
+#messageList {
+    margin-top: 10px;
+}
+.messageBlock {
+}
+.messageBlock > .message > .bubble {
+    border: 2px solid lightblue;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: aliceblue;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+.messageBlock > .date {
+    font-size: 10pt;
+}
+
+#userList {
+    width: 200px;
+    text-align: center;
+}
+#userList > .user {
+    margin-bottom: 10px;
+}

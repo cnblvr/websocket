@@ -2,21 +2,165 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>qwe</title>
+    <title>чат</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="websocket.js"></script>
     <script>
+        users = [];
+        function UsersInfo(uu) {
+            var userList = document.getElementById("userList");
+            while (userList.firstChild) {
+                userList.removeChild(userList.firstChild);
+            }
+            users = [];
+
+            uu.forEach(function (item, _, _) {
+                var userList = document.getElementById("userList");
+
+                var user = document.createElement("div");
+                user.className = "user";
+                user.style.color = item.name_color;
+                user.innerText = item.name;
+
+                userList.appendChild(user);
+                users[item.id] = item;
+
+                var authorList = document.getElementById("messageList").getElementsByClassName("author");
+                for(var i = 0; i < authorList.length; i++) {
+                    if(authorList[i].classList.contains("author"+item.id)) {
+                        authorList[i].innerText = item.name;
+                        authorList[i].style.color = item.name_color;
+                    }
+                }
+            });
+        }
+        function AddMessages(messages) {
+            messages.forEach(function (item, _, _) {
+                var messageList = document.getElementById("messageList");
+
+                var author = document.createElement("td");
+                author.className = "author author"+item.author;
+                author.setAttribute("valign", "top");
+                author.setAttribute("width", "10%");
+                var authorobj = users[item.author];
+                if(authorobj !== undefined) {
+                    author.style.color = authorobj.name_color;
+                    author.innerText = authorobj.name + ":";
+                } else {
+                    if(item.author_name !== undefined) {
+                        author.innerText = item.author_name + ":";
+                    } else {
+                        author.innerText = "НЛО:";
+                    }
+                    if(item.author_color_name !== undefined) {
+                        author.style.color = item.author_color_name;
+                    } else {
+                        author.style.color = "black";
+                    }
+                }
+
+                var message = document.createElement("td");
+                message.className = "message";
+                message.setAttribute("width", "80%");
+                var bubbleMessage = document.createElement("div");
+                bubbleMessage.className = "bubble";
+                bubbleMessage.innerText = item.message;
+                message.appendChild(bubbleMessage);
+
+                var date = document.createElement("td");
+                date.className = "date";
+                date.setAttribute("valign", "top");
+                date.setAttribute("align", "right");
+                date.setAttribute("width", "10%");
+                date.innerText = item.date;
+
+                var messageBlock = document.createElement("tr");
+                messageBlock.className = "messageBlock";
+                messageBlock.appendChild(author);
+                messageBlock.appendChild(message);
+                messageBlock.appendChild(date);
+
+                messageList.insertBefore(messageBlock, messageList.firstChild);
+            });
+        }
         function onKeyPress(e) {
-            if(e.keyCode == 13) {
+            if(e.keyCode === 13) {
                 var tb = document.getElementById("messageBox");
-                if(tb.value != "") {
+                if(tb.value !== "") {
                     sendMessage(tb.value);
                 }
                 return false;
             }
         }
+        function ChangeName() {
+            var changeName = document.getElementById("changeName");
+            changeName.style.display = "none";
+
+            var inputName = document.createElement("input");
+            inputName.id = "inputName";
+            inputName.value = changeName.innerText;
+
+            inputName.onkeyup = function(e) {
+                if(e.keyCode === 13) {
+                    var inputName = document.getElementById("inputName");
+                    var changeName = document.getElementById("changeName");
+                    if(inputName.value !== "" && inputName.value !== changeName.innerText) {
+                        changeName.innerText = inputName.value;
+                        changeName.style.display = "block";
+                        inputName.parentNode.removeChild(inputName);
+                        setProfile(inputName.value, null);
+                    }
+                    return false;
+                } else if(e.keyCode === 27) {
+                    document.getElementById("changeName").style.display = "block";
+                    var inputName = document.getElementById("inputName");
+                    inputName.parentNode.removeChild(inputName);
+                }
+            };
+
+            changeName.parentElement.insertBefore(inputName, changeName);
+            document.getElementById("inputName").focus();
+        }
+        function ChangeColor() {
+            var changeColor = document.getElementById("changeColor");
+            changeColor.style.display = "none";
+
+            var selectColors = document.createElement("select");
+            selectColors.id = "selectColors";
+            for(var i = 0; i < colors.length; i++) {
+                var optionColor = document.createElement("option");
+                optionColor.innerText = colors[i];
+                optionColor.value = i;
+                optionColor.style.color = colors[i];
+                selectColors.appendChild(optionColor);
+            }
+            selectColors.selectedIndex = -1;
+            selectColors.onchange = function () {
+                var selectColors = document.getElementById("selectColors");
+                var changeColor = document.getElementById("changeColor");
+                changeColor.style.backgroundColor = colors[selectColors.options[selectColors.selectedIndex].value];
+                changeColor.style.display = "block";
+                selectColors.parentNode.removeChild(selectColors);
+                setProfile(null, colors[selectColors.options[selectColors.selectedIndex].value]);
+            };
+
+            changeColor.parentElement.insertBefore(selectColors, changeColor);
+        }
     </script>
 </head>
 <body>
-    <input id="messageBox" type="text" autofocus value="msg123" onkeypress="return onKeyPress(event)">
+    <table border="0" cellspacing="0" width="100%">
+        <tr>
+            <td width="150"><label for="messageBox">Сообщение:</label></td>
+            <td><input id="messageBox" type="text" autofocus value="msg123" onkeypress="return onKeyPress(event)"></td>
+            <td width="250" align="right" valign="middle"><div id="changeName" onclick="ChangeName();"></div><div id="changeColor" onclick="ChangeColor();"></div></td>
+            <td rowspan="2" width="1" valign="top"><div id="userList"></div></td>
+        </tr>
+        <tr><td colspan="3">
+            <table id="messageList" border="0" width="100%"></table>
+        </td></tr>
+    </table>
+
+
 </body>
 </html>
