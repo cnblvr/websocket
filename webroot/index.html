@@ -88,6 +88,7 @@
                 var tb = document.getElementById("messageBox");
                 if(tb.value !== "") {
                     sendMessage(tb.value);
+                    tb.value = "";
                 }
                 return false;
             }
@@ -151,12 +152,15 @@
 <body>
     <table border="0" cellspacing="0" width="100%">
         <tr>
-            <td width="150"><label for="messageBox">Сообщение:</label></td>
-            <td><input id="messageBox" type="text" autofocus value="msg123" onkeypress="return onKeyPress(event)"></td>
-            <td width="250" align="right" valign="middle"><div id="changeName" onclick="ChangeName();"></div><div id="changeColor" onclick="ChangeColor();"></div></td>
+            <td valign="top" height="1">
+                <table border="0" width="100%"><tr>
+                    <td width="150"><label for="messageBox">Сообщение:</label></td>
+                    <td valign="top"><input id="messageBox" type="text" autofocus onkeypress="return onKeyPress(event)"></td>
+                    <td width="250" align="right" valign="middle"><div id="changeName" onclick="ChangeName();"></div><div id="changeColor" onclick="ChangeColor();"></div></td>
+                </tr></table>
             <td rowspan="2" width="1" valign="top"><div id="userList"></div></td>
         </tr>
-        <tr><td colspan="3">
+        <tr><td valign="top">
             <table id="messageList" border="0" width="100%"></table>
         </td></tr>
     </table>
